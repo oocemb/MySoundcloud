@@ -1,10 +1,11 @@
-
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from src.base.services import get_path_upload_avatar, validate_size_image
 
+
 class AuthUser(models.Model):
     """Модель пользователя"""
+
     email = models.EmailField(max_length=128, unique=True)
     join_date = models.DateTimeField(auto_now_add=True)
     country = models.CharField(max_length=30, blank=True, null=True)
@@ -15,7 +16,10 @@ class AuthUser(models.Model):
         upload_to=get_path_upload_avatar,
         blank=True,
         null=True,
-        validators=[FileExtensionValidator(allowed_extensions=['jpg']), validate_size_image]
+        validators=[
+            FileExtensionValidator(allowed_extensions=["jpg"]),
+            validate_size_image,
+        ],
     )
 
     @property
@@ -29,17 +33,23 @@ class AuthUser(models.Model):
 
 class Follower(models.Model):
     """Модель подписчиков"""
-    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE, related_name='owner')
-    subscriber = models.ForeignKey(AuthUser, on_delete=models.CASCADE, related_name='subscriber')
+
+    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE, related_name="owner")
+    subscriber = models.ForeignKey(
+        AuthUser, on_delete=models.CASCADE, related_name="subscriber"
+    )
 
     def __str__(self) -> str:
-        return f'{self.subscriber} подписан на {self.user}'
+        return f"{self.subscriber} подписан на {self.user}"
 
 
 class SocialLink(models.Model):
     """Модель ссылок на соц сети пользователя"""
-    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE, related_name='social_links')
+
+    user = models.ForeignKey(
+        AuthUser, on_delete=models.CASCADE, related_name="social_links"
+    )
     link = models.URLField(max_length=100)
 
     def __str__(self) -> str:
-        return f'{self.user}'
+        return f"{self.user}"

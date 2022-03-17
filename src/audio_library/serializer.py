@@ -11,20 +11,20 @@ class BaseSerializer(serializers.ModelSerializer):
 class GenreSerializer(BaseSerializer):
     class Meta:
         model = models.Genre
-        fields = ('id', 'name')
+        fields = ("id", "name")
 
 
 class LicenseSerializer(BaseSerializer):
     class Meta:
         model = models.License
-        fields = ('id', 'text')
+        fields = ("id", "text")
 
 
 class AlbumSerializer(BaseSerializer):
     class Meta:
         model = models.Album
-        fields = ('id', 'name','description','cover','private')
-    
+        fields = ("id", "name", "description", "cover", "private")
+
     def update(self, instance, validated_data):
         delete_old_file(instance.cover.path)
         return super().update(instance, validated_data)
@@ -37,9 +37,22 @@ class CreateAuthorTrackSerializer(BaseSerializer):
 
     class Meta:
         model = models.Track
-        fields = ('id', 'title','license','genre','album','user',
-        'link_of_author', 'file', 'create_at','plays_count','downloads','private','cover')
-    
+        fields = (
+            "id",
+            "title",
+            "license",
+            "genre",
+            "album",
+            "user",
+            "link_of_author",
+            "file",
+            "create_at",
+            "plays_count",
+            "downloads",
+            "private",
+            "cover",
+        )
+
     def update(self, instance, validated_data):
         delete_old_file(instance.file.path)
         delete_old_file(instance.cover.path)
@@ -59,8 +72,8 @@ class CreatePlayListSerializer(BaseSerializer):
 
     class Meta:
         model = models.PlayList
-        fields = ('id', 'title','cover','tracks','downloads','plays_count')
-    
+        fields = ("id", "title", "cover", "tracks", "downloads", "plays_count")
+
     def update(self, instance, validated_data):
         delete_old_file(instance.cover.path)
         return super().update(instance, validated_data)
@@ -75,13 +88,14 @@ class CommentAuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Comment
-        fields = ('id', 'text', 'track')
+        fields = ("id", "text", "track")
 
 
 class CommentSerializer(serializers.ModelSerializer):
     """Сериализация коментариев"""
 
     user = AuthorSerializer()
+
     class Meta:
         model = models.Comment
-        fields = ('id', 'text', 'user', 'track', 'create_at')
+        fields = ("id", "text", "user", "track", "create_at")
